@@ -1,7 +1,7 @@
 import { StripeCredentials } from '../types/credentials.types'
 import Stripe from 'stripe'
 export class StripePayment {
-    public stripe: Stripe;
+    private stripe: Stripe;
     constructor(credentials : StripeCredentials) {
         this.stripe = new Stripe(credentials.apiKey, {
             apiVersion : credentials.apiVersion,

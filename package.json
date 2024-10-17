@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/DarshilChauhan1/Unify-Pay#readme",
   "dependencies": {
+    "razorpay": "^2.9.4",
     "stripe": "^17.2.0"
   },
   "devDependencies": {

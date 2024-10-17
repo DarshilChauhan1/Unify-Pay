@@ -8,3 +8,9 @@ export interface StripeCredentials {
     timeout?: number;
     port?: number;
 }
+
+
+export interface RazorPayCredentials {
+    keyId : string;
+    keySecret : string;
+}
