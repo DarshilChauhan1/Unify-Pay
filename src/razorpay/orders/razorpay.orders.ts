@@ -1,10 +1,13 @@
 import Razorpay from "razorpay";
 import { RazorPayCredentials } from "src/types/credentials.types";
 import { CreateOrderDto } from "./dto/createOrder.dtot";
+import { GetOneOrderDto, QueryOrderDto } from "./dto/queryOrder.dto";
+import moment from 'moment'
+import { UpdateOrderDto } from "./dto/upateOrder.dto";
 
 export class RazorPayOrders {
     private razorpay: Razorpay
-    constructor(private credentials: RazorPayCredentials) {
+    constructor(credentials: RazorPayCredentials) {
         this.razorpay = new Razorpay({
             key_id: credentials.keyId,
             key_secret: credentials.keySecret
@@ -22,22 +25,79 @@ export class RazorPayOrders {
         }
     }
 
-    async getAllOrders(){
+    async getAllOrders(payload: QueryOrderDto) {
         try {
-            
+            const queryData = this.parseQueryParams(payload)
+            const orders = await this.razorpay.api.get({
+                url: '/orders',
+                body: queryData
+            })
+            return orders
         } catch (error) {
-            
+            throw error
+        }
+    }
+
+    async getOrderById(payload: GetOneOrderDto) {
+        try {
+            const { orderId } = payload
+            const order = await this.razorpay.orders.fetch(orderId)
+            return order
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async getOrderPayments(payload: GetOneOrderDto) {
+        try {
+            const { orderId } = payload
+            const payments = await this.razorpay.orders.fetchPayments(orderId)
+            return payments
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async updateOrder(payload: UpdateOrderDto) {
+        try {
+            const { orderId, notes } = payload
+            const order = await this.razorpay.orders.edit(orderId, { notes: notes })
+            return order
+        } catch (error) {
+            throw error
         }
     }
 
     private validateOrder(payload: CreateOrderDto) {
         const { receipt, partialPayment, first_payment_min_amount } = payload
-        if(receipt && receipt.length > 40) {
+        if (receipt && receipt.length > 40) {
             throw new Error('Receipt should be of max 40 characters')
         }
 
-        if(partialPayment && !first_payment_min_amount) {
+        if (partialPayment && !first_payment_min_amount) {
             throw new Error('first_payment_min_amount is required when partialPayment is true')
         }
+    }
+
+    private parseQueryParams(payload: QueryOrderDto) {
+        const { authorized, orderFromTime, orderUntilTime, ordersToFetch, receipt, skipOrders } = payload
+        const newPayload = {
+            authorized,
+            receipt,
+            ordersToFetch,
+            skipOrders
+        }
+        if (orderFromTime) {
+            console.log("inside this")
+            if (!moment(orderFromTime).isValid()) throw new Error('Invalid date format')
+            newPayload['from'] = moment(orderFromTime).unix()
+        }
+
+        if (orderUntilTime) {
+            if (!moment(orderUntilTime).isValid()) throw new Error('Invalid date format')
+            newPayload['to'] = moment(orderUntilTime).unix()
+        }
+
+        return newPayload
     }
 }
