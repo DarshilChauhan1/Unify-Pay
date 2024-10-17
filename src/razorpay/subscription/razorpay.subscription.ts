@@ -1,5 +1,5 @@
 import Razorpay from "razorpay";
-import { RazorPayCredentials } from "src/types/credentials.types";
+import { RazorPayCredentials } from "src/interfaces/credentials.types";
 export class RazorPaySubscription{
     private razorpay : Razorpay
     constructor(credentials : RazorPayCredentials){
@@ -8,4 +8,6 @@ export class RazorPaySubscription{
             key_secret : credentials.keySecret
         })
     }
+
+    
 }

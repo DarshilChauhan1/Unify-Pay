@@ -1,5 +1,5 @@
 import Razorpay from 'razorpay'
-import { RazorPayCredentials } from 'src/types/credentials.types'
+import { RazorPayCredentials } from 'src/interfaces/credentials.types'
 import { RazorPayOrders } from '../razorpay/orders/razorpay.orders'
 import { CreateOrderDto } from 'src/razorpay/orders/dto/createOrder.dtot';
 import { QueryOrderDto } from 'src/razorpay/orders/dto/queryOrder.dto';

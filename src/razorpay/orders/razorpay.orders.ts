@@ -1,5 +1,5 @@
 import Razorpay from "razorpay";
-import { RazorPayCredentials } from "src/types/credentials.types";
+import { RazorPayCredentials } from "src/interfaces/credentials.types";
 import { CreateOrderDto } from "./dto/createOrder.dtot";
 import { GetOneOrderDto, QueryOrderDto } from "./dto/queryOrder.dto";
 import moment from 'moment'
