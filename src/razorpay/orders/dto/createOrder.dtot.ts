@@ -9,3 +9,25 @@ export interface CreateOrderDto {
     partialPayment?: boolean;
     first_payment_min_amount?: number;
 }
+
+export interface CheckoutSessionDto {
+    apiKey: string;
+    businessName?: string;
+    description?: string;
+    imageUrl?: string;
+    callBackUrl?: string;
+    customerInfo?: {
+        name?: string;
+        email?: string;
+        contact?: string;
+    };
+    notes?: any;
+    theme?: {
+        color?: string;
+    };
+}
+
+export interface CombinedOrderAndCheckoutSessionDto {
+    order: CreateOrderDto;
+    checkoutSession: CheckoutSessionDto;
+}

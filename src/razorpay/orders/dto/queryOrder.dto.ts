@@ -3,7 +3,6 @@ export enum AuthorizedStatus {
     UNAUTHORIZED_PAYMENT = 1
 }
 
-
 export interface QueryOrderDto {
     authorized?: AuthorizedStatus;
     receipt ?: string;

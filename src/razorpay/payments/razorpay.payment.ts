@@ -26,7 +26,7 @@ export class RazorpayPayment {
         }
     }
 
-    async createPayment(payload: CapturePaymentDto) {
+    async createPayment(payload: CapturePaymentDto) : Promise<object> {
         try {
             const payment = await this.razorpay.payments.capture(payload.paymentId, payload.orderAmount, payload.currency);
             return payment

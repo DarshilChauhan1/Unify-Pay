@@ -1,6 +1,6 @@
 import Razorpay from "razorpay";
 import { RazorPayCredentials } from "src/interfaces/credentials.types";
-import { CreateOrderDto } from "./dto/createOrder.dtot";
+import { CombinedOrderAndCheckoutSessionDto, CreateOrderDto } from "./dto/createOrder.dtot";
 import { GetOneOrderDto, QueryOrderDto } from "./dto/queryOrder.dto";
 import moment from 'moment'
 import { UpdateOrderDto } from "./dto/upateOrder.dto";
@@ -21,6 +21,33 @@ export class RazorPayOrders {
             return order
         } catch (error) {
             console.log(error)
+            throw error
+        }
+    }
+
+    async createCheckoutSessionWithOrder(payload: CombinedOrderAndCheckoutSessionDto) : Promise<[any, any]> {
+        try {
+            const { order, checkoutSession } = payload
+            this.validateOrder(order)
+            const orderData = await this.razorpay.orders.create(order)
+
+            const checkoutSessionData = {
+                key : checkoutSession.apiKey,
+                name : checkoutSession.businessName,
+                description : checkoutSession.description,
+                image : checkoutSession.imageUrl,
+                callback_url : checkoutSession.callBackUrl,
+                prefill : checkoutSession.customerInfo,
+                order_id: orderData.id,
+                amount: order.amount,
+                currency: order.currency,
+                notes: checkoutSession.notes,
+                theme: checkoutSession.theme
+            }
+
+            return [orderData, checkoutSessionData];
+
+        } catch (error) {
             throw error
         }
     }
@@ -88,7 +115,6 @@ export class RazorPayOrders {
             skipOrders
         }
         if (orderFromTime) {
-            console.log("inside this")
             if (!moment(orderFromTime).isValid()) throw new Error('Invalid date format')
             newPayload['from'] = moment(orderFromTime).unix()
         }

@@ -1,21 +1,21 @@
-import Razorpay from 'razorpay'
 import { RazorPayCredentials } from 'src/interfaces/credentials.types'
 import { RazorPayOrders } from '../razorpay/orders/razorpay.orders'
-import { CreateOrderDto } from 'src/razorpay/orders/dto/createOrder.dtot';
+import { CombinedOrderAndCheckoutSessionDto, CreateOrderDto } from 'src/razorpay/orders/dto/createOrder.dtot';
 import { QueryOrderDto } from 'src/razorpay/orders/dto/queryOrder.dto';
 import { UpdateOrderDto } from 'src/razorpay/orders/dto/upateOrder.dto';
 import { RazorPaySubscription } from 'src/razorpay/subscription/razorpay.subscription';
+import { RazorpayPayment } from 'src/razorpay/payments/razorpay.payment';
 export class RazorPayPayment {
-    private razorpay: Razorpay;
     private razorPayOrder: RazorPayOrders;
+    private razorPayPayment: RazorpayPayment;
     private razorPaySubscription: RazorPaySubscription;
     constructor(private credentials: RazorPayCredentials) {
-        this.razorpay = new Razorpay({
-            key_id: credentials.keyId,
-            key_secret: credentials.keySecret
+        this.razorPayOrder = new RazorPayOrders({
+            keyId: credentials.keyId,
+            keySecret: credentials.keySecret
         })
 
-        this.razorPayOrder = new RazorPayOrders({
+        this.razorPayPayment = new RazorpayPayment({
             keyId: credentials.keyId,
             keySecret: credentials.keySecret
         })
@@ -37,6 +37,10 @@ export class RazorPayPayment {
 
     async updateOrder(payload: UpdateOrderDto) {
         return await this.razorPayOrder.updateOrder(payload)
+    }
+
+    async createCheckoutSessionWithOrder(payload: CombinedOrderAndCheckoutSessionDto) {
+        return await this.razorPayOrder.createCheckoutSessionWithOrder(payload)
     }
 
 }
