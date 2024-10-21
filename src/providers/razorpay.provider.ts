@@ -1,10 +1,11 @@
-import { RazorPayCredentials } from 'src/interfaces/credentials.types'
+import { RazorPayCredentials } from '../common/interfaces/credentials.types'
 import { RazorPayOrders } from '../razorpay/orders/razorpay.orders'
-import { CombinedOrderAndCheckoutSessionDto, CreateOrderDto } from 'src/razorpay/orders/dto/createOrder.dtot';
-import { QueryOrderDto } from 'src/razorpay/orders/dto/queryOrder.dto';
-import { UpdateOrderDto } from 'src/razorpay/orders/dto/upateOrder.dto';
-import { RazorPaySubscription } from 'src/razorpay/subscription/razorpay.subscription';
-import { RazorpayPayment } from 'src/razorpay/payments/razorpay.payment';
+import { CombinedOrderAndCheckoutSessionDto, CreateOrderDto } from '../razorpay/orders/dto/createOrder.dtot';
+import { QueryOrderDto } from '../razorpay/orders/dto/queryOrder.dto';
+import { UpdateOrderDto } from '../razorpay/orders/dto/upateOrder.dto';
+import { RazorPaySubscription } from '../razorpay/subscription/razorpay.subscription';
+import { RazorpayPayment } from '../razorpay/payments/razorpay.payment';
+import { VerifySignatureDto } from '../razorpay/payments/dto/verifySignature.dto';
 export class RazorPayPayment {
     private razorPayOrder: RazorPayOrders;
     private razorPayPayment: RazorpayPayment;
@@ -41,6 +42,11 @@ export class RazorPayPayment {
 
     async createCheckoutSessionWithOrder(payload: CombinedOrderAndCheckoutSessionDto) {
         return await this.razorPayOrder.createCheckoutSessionWithOrder(payload)
+    }
+
+    // payment methods
+    async verifyPaymentSignature(payload: VerifySignatureDto, secret: string) {
+        return await this.razorPayPayment.verifyPaymentSignature(payload, secret)
     }
 
 }
